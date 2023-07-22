@@ -5,6 +5,7 @@ import {
   Textarea,
   Text,
   Button,
+  Input,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -18,22 +19,35 @@ import { AddIcon } from "@chakra-ui/icons";
 
 const SubmitReview = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [value, setValue] = useState("");
+  const [comment, setComment] = useState("");
+  const [file, setFile] = useState(null);
+  const handleFileChange = (event) => {
+    if (!event.target.files[0]) return;
+    setFile(event.target.files[0]);
+  };
 
-  const handleInputChange = (e) => {
+  const handleCommentChange = (e) => {
     let inputValue = e.target.value;
-    setValue(inputValue);
+    setComment(inputValue);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    formData.append("comment", comment);
   };
 
   return (
     <MainLayout>
-      <Box className="p-4">
+      <form className="p-4" onSubmit={handleSubmit}>
         <Text className="container mx-auto px-4 py-20">
           Tell us about your experience
         </Text>
         <Textarea
-          value={value}
-          onChange={handleInputChange}
+          value={comment}
+          onChange={handleCommentChange}
           placeholder="Here is a sample placeholder"
           size="sm"
         />
@@ -45,7 +59,7 @@ const SubmitReview = () => {
         </Box>
         <Box className="mb-2" />
         <Box>
-          <Button colorScheme="teal" size="sm">
+          <Button colorScheme="teal" size="sm" type="submit">
             Submit
           </Button>
         </Box>
@@ -54,13 +68,20 @@ const SubmitReview = () => {
           <ModalContent>
             <ModalHeader>Modal Title</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>file import here</ModalBody>
+            <ModalBody>
+              file import here
+              <Input
+                type="file"
+                placeholder="Upload photo"
+                onChange={handleFileChange}
+              />
+            </ModalBody>
             <ModalFooter>
               <Button onClick={onClose}>Close</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
-      </Box>
+      </form>
     </MainLayout>
   );
 };
