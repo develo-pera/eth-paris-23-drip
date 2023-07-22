@@ -3,6 +3,7 @@ import MainLayout from "@/components/layout/layout";
 import {
   Box,
   Textarea,
+  Image,
   Text,
   Button,
   Input,
@@ -20,10 +21,11 @@ import { AddIcon } from "@chakra-ui/icons";
 const SubmitReview = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [comment, setComment] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const handleFileChange = (event) => {
-    if (!event.target.files[0]) return;
-    setFile(event.target.files[0]);
+    if (!event.target.files) return;
+    // setFile(event.target.files[0]);
+    setFiles([...files, ...event.target.files]);
   };
 
   const handleCommentChange = (e) => {
@@ -34,9 +36,13 @@ const SubmitReview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("fileName", file.name);
+    // formData.append("file", file);
+    // formData.append("fileName", file.name);
     formData.append("comment", comment);
+    files.forEach((file, i) => {
+      data.append(`file-${i}`, file, file.name);
+    });
+    console.log("??? submitted", formData.get("file-0"));
   };
 
   return (
@@ -52,12 +58,18 @@ const SubmitReview = () => {
           size="sm"
         />
         <Box className="mb-2" />
+        {files.map((file) => (
+          <Box key={file.name}>
+            <Text>{file.name}</Text>
+            <Image src={URL.createObjectURL(file)} />
+          </Box>
+        ))}
+        <Box className="mb-2" />
         <Box>
           <Button colorScheme="teal" size="sm" onClick={onOpen}>
             <AddIcon /> <Box className="inline ml-2">Add images</Box>
           </Button>
         </Box>
-        <Box className="mb-2" />
         <Box>
           <Button colorScheme="teal" size="sm" type="submit">
             Submit
@@ -74,6 +86,7 @@ const SubmitReview = () => {
                 type="file"
                 placeholder="Upload photo"
                 onChange={handleFileChange}
+                multiple
               />
             </ModalBody>
             <ModalFooter>
