@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --text: 0, 0, 0;
+  --background: #fff;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: var(--background);
+}
+
+:root {
+  .paypal-window {
+    background-color: whitesmoke;
+    padding: 8px 4px;
+    margin-bottom: 20px;
+    border-radius: 2px;
+  }
+}
