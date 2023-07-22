@@ -6,15 +6,12 @@ import {
   Image,
   Text,
   Button,
-  Input,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
+  Slider,
+  SliderMark,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  Tooltip,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { storageClient } from "@/lib/web3Storage";
@@ -23,6 +20,8 @@ import AssetCard from "./AssetCard";
 
 const SubmitReview = () => {
   const [comment, setComment] = useState("");
+  const [review, setReview] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
   const [assets, setAssets] = useState([]);
 
   const createAssetCard = () =>
@@ -92,10 +91,54 @@ const SubmitReview = () => {
         <Text className="container mx-auto px-4 py-20">
           Tell us about your experience
         </Text>
+        <Box className="mb-2">Rate:</Box>
+        <Slider
+          id="slider"
+          defaultValue={0}
+          min={0}
+          max={5}
+          colorScheme="teal"
+          onChange={(v) => setReview(v)}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
+            0
+          </SliderMark>
+          <SliderMark value={1} mt="1" ml="-2.5" fontSize="sm">
+            1
+          </SliderMark>
+          <SliderMark value={2} mt="1" ml="-2.5" fontSize="sm">
+            2
+          </SliderMark>
+          <SliderMark value={3} mt="1" ml="-2.5" fontSize="sm">
+            3
+          </SliderMark>
+          <SliderMark value={4} mt="1" ml="-2.5" fontSize="sm">
+            4
+          </SliderMark>
+          <SliderMark value={5} mt="1" ml="-2.5" fontSize="sm">
+            5
+          </SliderMark>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <Tooltip
+            hasArrow
+            bg="teal.500"
+            color="white"
+            placement="top"
+            isOpen={showTooltip}
+            label={review}
+          >
+            <SliderThumb />
+          </Tooltip>
+        </Slider>
+        <Box className="mb-2 h-8" />
         <Textarea
           value={comment}
           onChange={handleCommentChange}
-          placeholder="Here is a sample placeholder"
+          placeholder="Comment"
           size="sm"
         />
         <Box className="mb-2" />
