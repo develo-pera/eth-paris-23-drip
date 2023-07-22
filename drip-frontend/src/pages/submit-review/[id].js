@@ -51,9 +51,8 @@ const SubmitReview = () => {
     const formData = new FormData();
     formData.append("comment", comment);
     assets.forEach((file, i) => {
-      data.append(`file-${i}`, file, file.name);
+      formData.append(`file-${i}`, file);
     });
-    console.log("??? submitted", formData.get("file-0"));
   };
 
   return (
