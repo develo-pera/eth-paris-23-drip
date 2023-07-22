@@ -2,9 +2,13 @@ import { Button, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import ConnectModal from "@/components/connectModal/connectModal";
 import Link from "next/link";
+import { useAccount } from "wagmi";
 
 const Header = () => {
+  const { address } = useAccount();
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+
+  console.log(address)
 
   const openConnectModal = () => setIsConnectModalOpen(true);
   const closeConnectModal = () => setIsConnectModalOpen(false);
@@ -15,12 +19,18 @@ const Header = () => {
         <Link href="/">
           <Text>DRIPvisor</Text>
         </Link>
-        <div className="flex items-center justify-between gap-10">
-          <a>Join as restaurant</a>
-          <Button onClick={openConnectModal} size="lg">Connect</Button>
-        </div>
+        {
+          address ? (
+            <Text>{address}</Text>
+          ) : (
+          <div className="flex items-center justify-between gap-10">
+            <a>Join as restaurant</a>
+            <Button onClick={openConnectModal} size="lg">Connect</Button>
+          </div>
+          )
+        }
       </div>
-      <ConnectModal isOpen={isConnectModalOpen} handleClose={closeConnectModal} />
+        <ConnectModal isOpen={isConnectModalOpen} handleClose={closeConnectModal} />
     </>
   );
 }

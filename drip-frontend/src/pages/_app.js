@@ -1,7 +1,21 @@
 import { Inter } from "next/font/google";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { WagmiConfig, createConfig, configureChains } from "wagmi";
+import { polygonMumbai, gnosisChiado } from 'wagmi/chains'
+import { publicProvider } from "wagmi/providers/public";
 
 import "@/styles/globals.scss"
+
+const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [polygonMumbai, gnosisChiado],
+  [publicProvider()],
+)
+
+const config = createConfig({
+  autoConnect: true,
+  publicClient,
+  webSocketPublicClient,
+})
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,15 +72,17 @@ const theme = extendTheme({
 
 export default function App({ Component, pageProps }) {
   return (
-    <ChakraProvider theme={theme}>
-      <style jsx global>
-        {`
-            :root {
-              --inter: ${inter.style.fontFamily};
-            }
-          `}
-      </style>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <WagmiConfig config={config}>
+      <ChakraProvider theme={theme}>
+        <style jsx global>
+          {`
+              :root {
+                --inter: ${inter.style.fontFamily};
+              }
+            `}
+        </style>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </WagmiConfig>
   )
 }
