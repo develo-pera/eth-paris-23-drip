@@ -11,10 +11,12 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  Tooltip, Spinner,
+  Tooltip,
+  Spinner,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { storageClient } from "@/lib/web3Storage";
+import { useLazyQuery } from "@airstack/airstack-react";
 
 import AssetCard from "./AssetCard";
 import { useAccount } from "wagmi";
@@ -29,6 +31,7 @@ const SubmitReview = () => {
   const [review, setReview] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
   const [assets, setAssets] = useState([]);
+  const [fetch, { data, loading, error }] = useLazyQuery(query, variables);
 
   const fetchData = async () => {
     if (!address) {
@@ -37,7 +40,9 @@ const SubmitReview = () => {
 
     setPageLoading(true);
 
-    const userRepsonse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`);
+    const userRepsonse = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`
+    );
     const userResponseJson = await userRepsonse.json();
     setUser(userResponseJson);
 
@@ -47,6 +52,12 @@ const SubmitReview = () => {
 
     setPageLoading(false);
   };
+
+  useEffect(() => {
+    if (user) {
+      fetch();
+    }
+  }, [user]);
 
   const createAssetCard = () =>
     setAssets((prevState) => [...prevState, { file: null, name: "" }]);
@@ -124,26 +135,25 @@ const SubmitReview = () => {
           <Spinner />
         </div>
       </MainLayout>
-    )
+    );
   }
 
-  console.log(review)
+  console.log(review);
   return (
     <MainLayout>
       <div className="container mx-auto my-20">
-        {
-          user &&
-          !user?.proofOfHumanity && (
-            <div className="mb-10">
-              <Text>Prove us that you&apos;re human</Text>
-              <Text className="text-sm italic">Note: you have to do this only first time</Text>
-              <div className="mt-5 grid gap-2 md:grid-cols-4">
-                <Button colorScheme="teal">Prove with Sismo</Button>
-                <Button colorScheme="teal">Prove with Worldcoin</Button>
-              </div>
+        {user && !user?.proofOfHumanity && (
+          <div className="mb-10">
+            <Text>Prove us that you&apos;re human</Text>
+            <Text className="text-sm italic">
+              Note: you have to do this only first time
+            </Text>
+            <div className="mt-5 grid gap-2 md:grid-cols-4">
+              <Button colorScheme="teal">Prove with Sismo</Button>
+              <Button colorScheme="teal">Prove with Worldcoin</Button>
             </div>
-          )
-        }
+          </div>
+        )}
 
         <div className="mb-10">
           <Text>Provide a certification from the restaurant</Text>
@@ -196,20 +206,16 @@ const SubmitReview = () => {
               <SliderThumb />
             </Tooltip>
           </Slider>
-          {
-            review &&
-            review > 3 &&
-            (
-              <div className="mt-20 mb-10">
-                <Text className="mb-5">Looks like you really loved the place! Wanna leave a tip?</Text>
-                <Button colorScheme="teal">Leave the tip with ZKBob</Button>
-              </div>
-            )
-          }
+          {review && review > 3 && (
+            <div className="mt-20 mb-10">
+              <Text className="mb-5">
+                Looks like you really loved the place! Wanna leave a tip?
+              </Text>
+              <Button colorScheme="teal">Leave the tip with ZKBob</Button>
+            </div>
+          )}
           <Box className="mb-2 h-8" />
-          <Text className="text-lg mb-5">
-            Tell us about your experience
-          </Text>
+          <Text className="text-lg mb-5">Tell us about your experience</Text>
           <Textarea
             value={comment}
             onChange={handleCommentChange}
@@ -236,7 +242,12 @@ const SubmitReview = () => {
             </div>
           </div>
           <Box>
-            <Button disabled={!user?.proofOfHumanity} className="w-[100%] disabled:bg-grey-200 bg-teal-500" size="lg" type="submit">
+            <Button
+              disabled={!user?.proofOfHumanity}
+              className="w-[100%] disabled:bg-grey-200 bg-teal-500"
+              size="lg"
+              type="submit"
+            >
               Submit
             </Button>
           </Box>
