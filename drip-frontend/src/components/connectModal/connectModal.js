@@ -1,51 +1,65 @@
 import { useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, } from "@chakra-ui/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+} from "@chakra-ui/react";
 import { MetaMaskSDK } from "@metamask/sdk";
 
-const MMSDK = new MetaMaskSDK({dappMetadata: {name: "DRIP app"}});
+import { useAuth } from "@/context/auth";
 
-const ConnectModal = ({isOpen, handleClose}) => {
+const MMSDK = new MetaMaskSDK({ dappMetadata: { name: "DRIP app" } });
+
+const ConnectModal = ({ isOpen, handleClose }) => {
+  const { auth, setAuth } = useAuth();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
-    onSuccess: data => onMetamaskConnect(data)
+    onSuccess: (data) => onMetamaskConnect(data),
   });
 
   const onMetamaskConnect = async (data) => {
-    const userRepsonse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${data.account}`);
+    setAuth(data.account);
+    const userRepsonse = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${data.account}`
+    );
     const userResponseJson = await userRepsonse.json();
 
     console.log(userResponseJson);
 
     if (!userResponseJson) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            address: data.account,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              address: data.account,
+            }),
+          }
+        );
         const responseJson = await response.json();
       } catch (e) {
         console.log(e);
       }
     }
-
-  }
+  };
 
   const connectMetamask = async () => {
-
     try {
       await connect();
 
       handleClose();
     } catch (e) {
-      console.log("something went wrong")
+      console.log("something went wrong");
     }
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
@@ -55,12 +69,14 @@ const ConnectModal = ({isOpen, handleClose}) => {
         <ModalBody>
           <div className="grid gap-2 mt-10">
             <Button size="lg">Connect with Biconomy</Button>
-            <Button onClick={connectMetamask} size="lg">Connect with Metamask</Button>
+            <Button onClick={connectMetamask} size="lg">
+              Connect with Metamask
+            </Button>
           </div>
         </ModalBody>
       </ModalContent>
     </Modal>
   );
-}
+};
 
 export default ConnectModal;
