@@ -8,8 +8,6 @@ const Header = () => {
   const { address } = useAccount();
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
 
-  console.log(address)
-
   const openConnectModal = () => setIsConnectModalOpen(true);
   const closeConnectModal = () => setIsConnectModalOpen(false);
 
@@ -24,7 +22,7 @@ const Header = () => {
             <Text className="p-3 bg-gray-100 rounded-sm">{`${address.slice(0, 7)}...${address.slice(-5)}`}</Text>
           ) : (
           <div className="flex items-center justify-between gap-10">
-            <a>Join as restaurant</a>
+            {/*<a>Join as restaurant</a>*/}
             <Button onClick={openConnectModal} size="lg">Connect</Button>
           </div>
           )

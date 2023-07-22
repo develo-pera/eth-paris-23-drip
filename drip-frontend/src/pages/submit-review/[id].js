@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainLayout from "@/components/layout/layout";
 import {
   Box,
@@ -11,18 +11,42 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  Tooltip,
+  Tooltip, Spinner,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { storageClient } from "@/lib/web3Storage";
 
 import AssetCard from "./AssetCard";
+import { useAccount } from "wagmi";
+import { useRouter } from "next/router";
 
 const SubmitReview = () => {
+  const router = useRouter();
+  const { address } = useAccount();
+  const [pageLoading, setPageLoading] = useState(false);
+  const [user, setUser] = useState();
   const [comment, setComment] = useState("");
   const [review, setReview] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
   const [assets, setAssets] = useState([]);
+
+  const fetchData = async () => {
+    if (!address) {
+      router.push("/");
+    }
+
+    setPageLoading(true);
+
+    const userRepsonse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`);
+    const userResponseJson = await userRepsonse.json();
+    setUser(userResponseJson);
+
+    // const restoResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`);
+    // const userResponseJson = await userRepsonse.json();
+    // setUser(userResponseJson);
+
+    setPageLoading(false);
+  };
 
   const createAssetCard = () =>
     setAssets((prevState) => [...prevState, { file: null, name: "" }]);
@@ -54,6 +78,10 @@ const SubmitReview = () => {
   };
 
   const handleSubmit = async (e) => {
+    if (!user?.proofOfHumanity) {
+      alert("Njesi covek");
+    }
+
     e.preventDefault();
     const uncompleteAssetsInAssetArray = !!assets.find(
       (asset) => asset.file === null || asset.file?.name === ""
@@ -85,13 +113,46 @@ const SubmitReview = () => {
     // TODO: Save project and data in database
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (pageLoading) {
+    return (
+      <MainLayout>
+        <div className="container mx-auto my-20 text-center">
+          <Spinner />
+        </div>
+      </MainLayout>
+    )
+  }
+
+  console.log(review)
   return (
     <MainLayout>
       <div className="container mx-auto my-20">
-        <form className="p-4" onSubmit={handleSubmit}>
-          <Text className="text-lg mb-10">
-            Tell us about your experience
-          </Text>
+        {
+          user &&
+          !user?.proofOfHumanity && (
+            <div className="mb-10">
+              <Text>Prove us that you&apos;re human</Text>
+              <Text className="text-sm italic">Note: you have to do this only first time</Text>
+              <div className="mt-5 grid gap-2 md:grid-cols-4">
+                <Button colorScheme="teal">Prove with Sismo</Button>
+                <Button colorScheme="teal">Prove with Worldcoin</Button>
+              </div>
+            </div>
+          )
+        }
+
+        <div className="mb-10">
+          <Text>Provide a certification from the restaurant</Text>
+          <div className="mt-5 grid gap-2 md:grid-cols-4">
+            <Button colorScheme="teal">Prove with PolygonID</Button>
+            <Button colorScheme="teal">Prove with EAS</Button>
+          </div>
+        </div>
+        <form onSubmit={handleSubmit}>
           <Box className="mb-2">Rate:</Box>
           <Slider
             id="slider"
@@ -135,7 +196,20 @@ const SubmitReview = () => {
               <SliderThumb />
             </Tooltip>
           </Slider>
+          {
+            review &&
+            review > 3 &&
+            (
+              <div className="mt-20 mb-10">
+                <Text className="mb-5">Looks like you really loved the place! Wanna leave a tip?</Text>
+                <Button colorScheme="teal">Leave the tip with ZKBob</Button>
+              </div>
+            )
+          }
           <Box className="mb-2 h-8" />
+          <Text className="text-lg mb-5">
+            Tell us about your experience
+          </Text>
           <Textarea
             value={comment}
             onChange={handleCommentChange}
@@ -157,12 +231,12 @@ const SubmitReview = () => {
               onClick={createAssetCard}
               className="py-9 px-4 rounded-lg text-center hover:cursor-pointer"
             >
-              <p className="text-sm mb-1">Add Image</p>
+              <p className="text-sm mb-1">Add Images of Receipt</p>
               <AddIcon boxSize={3} />
             </div>
           </div>
           <Box>
-            <Button colorScheme="teal" size="sm" type="submit">
+            <Button disabled={!user?.proofOfHumanity} className="w-[100%] disabled:bg-grey-200 bg-teal-500" size="lg" type="submit">
               Submit
             </Button>
           </Box>
