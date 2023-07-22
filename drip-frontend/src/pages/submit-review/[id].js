@@ -17,6 +17,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
+import { storageClient } from "@/lib/web3Storage";
 
 import AssetCard from "./AssetCard";
 
@@ -41,18 +42,48 @@ const SubmitReview = () => {
     setAssets(newAssetsArray);
   };
 
+  const saveFormToDatabase = async (assetsJsonCids) => {
+    const data = {
+      comment,
+      assets: assetsJsonCids,
+    };
+  };
+
   const handleCommentChange = (e) => {
     let inputValue = e.target.value;
     setComment(inputValue);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("comment", comment);
-    assets.forEach((file, i) => {
-      formData.append(`file-${i}`, file);
+    const uncompleteAssetsInAssetArray = !!assets.find(
+      (asset) => asset.file === null || asset.file?.name === ""
+    );
+
+    if (uncompleteAssetsInAssetArray) {
+      return alert("Validation error! All fields must be populated");
+    }
+
+    // TODO: Save project and data in database
+    const uploadPromises = assets.map(async (asset) => {
+      const cid = await storageClient.put([asset.file]);
+      const nftJsonObject = {
+        name: asset.name,
+        image: `ipfs://${cid}/${asset.file.name}`,
+      };
+      const blob = new Blob([JSON.stringify(nftJsonObject)], {
+        type: "application/json",
+      });
+      const nftJsonCid = await storageClient.put([
+        new File([blob], "metadata.json"),
+      ]);
+      return nftJsonCid;
     });
+
+    const assetsJsonCids = await Promise.all(uploadPromises);
+    console.log(assetsJsonCids);
+    saveFormToDatabase(assetsJsonCids);
+    // TODO: Save project and data in database
   };
 
   return (
