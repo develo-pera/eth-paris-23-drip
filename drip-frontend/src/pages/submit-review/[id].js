@@ -18,14 +18,27 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 
+import AssetCard from "./AssetCard";
+
 const SubmitReview = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [comment, setComment] = useState("");
-  const [files, setFiles] = useState([]);
-  const handleFileChange = (event) => {
-    if (!event.target.files) return;
-    // setFile(event.target.files[0]);
-    setFiles([...files, ...event.target.files]);
+  const [assets, setAssets] = useState([]);
+
+  const createAssetCard = () =>
+    setAssets((prevState) => [...prevState, { file: null, name: "" }]);
+  const handleAssetCardInputChange = (field, index, value) => {
+    const newAssetsArray = assets.map((asset, i) => {
+      if (i == index) {
+        return {
+          ...asset,
+          [field]: value,
+        };
+      }
+
+      return asset;
+    });
+
+    setAssets(newAssetsArray);
   };
 
   const handleCommentChange = (e) => {
@@ -36,10 +49,8 @@ const SubmitReview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    // formData.append("file", file);
-    // formData.append("fileName", file.name);
     formData.append("comment", comment);
-    files.forEach((file, i) => {
+    assets.forEach((file, i) => {
       data.append(`file-${i}`, file, file.name);
     });
     console.log("??? submitted", formData.get("file-0"));
@@ -58,42 +69,29 @@ const SubmitReview = () => {
           size="sm"
         />
         <Box className="mb-2" />
-        {files.map((file) => (
-          <Box key={file.name}>
-            <Text>{file.name}</Text>
-            <Image src={URL.createObjectURL(file)} />
-          </Box>
+        {assets.map((asset, index) => (
+          <AssetCard
+            key={index}
+            index={index}
+            assetObject={asset}
+            handleAssetCardInputChange={handleAssetCardInputChange}
+          />
         ))}
-        <Box className="mb-2" />
-        <Box>
-          <Button colorScheme="teal" size="sm" onClick={onOpen}>
-            <AddIcon /> <Box className="inline ml-2">Add images</Box>
-          </Button>
-        </Box>
+
+        <div className="my-10">
+          <div
+            onClick={createAssetCard}
+            className="py-9 px-4 rounded-lg text-center hover:cursor-pointer"
+          >
+            <p className="text-sm mb-1">Add asset</p>
+            <AddIcon boxSize={3} />
+          </div>
+        </div>
         <Box>
           <Button colorScheme="teal" size="sm" type="submit">
             Submit
           </Button>
         </Box>
-        <Modal onClose={onClose} isOpen={isOpen} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              file import here
-              <Input
-                type="file"
-                placeholder="Upload photo"
-                onChange={handleFileChange}
-                multiple
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button onClick={onClose}>Close</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
       </form>
     </MainLayout>
   );
