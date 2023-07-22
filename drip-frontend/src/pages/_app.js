@@ -3,6 +3,9 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
 import { polygonMumbai, gnosisChiado } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+import { init, useQuery } from "@airstack/airstack-react";
+
+init(process.env.NEXT_PUBLIC_AIRSTACK_API_KEY);
 
 import "@/styles/globals.scss";
 import { AuthProvider } from "@/context/auth";
