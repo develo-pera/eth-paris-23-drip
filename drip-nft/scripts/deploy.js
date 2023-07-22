@@ -13,7 +13,7 @@ async function main() {
   await svgCreator.deployed();
 
   console.log(
-    `DripNFT deployed to ${svgCreator.address}`
+    `SVG deployed to ${svgCreator.address}`
   );
 
   const DripNFT = await hre.ethers.getContractFactory("DripNFT");
@@ -22,7 +22,7 @@ async function main() {
   await dripNFT.deployed();
 
   console.log(
-    `DripNFT deployed to ${drip.address}`
+    `DripNFT deployed to ${dripNFT.address}`
   );
 }
 

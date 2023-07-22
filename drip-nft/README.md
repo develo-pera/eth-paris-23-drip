@@ -1,13 +1,2 @@
-# Sample Hardhat Project
-
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+SVG Creator Contract deployed to: 0x262A9e09ac95B90d7a9e3da4A49E3A0822A0312a
+DripNFT Collection deployed to: 0xa80b872eb9efd9FCD7F043f3c2eC5701c2FA308e
