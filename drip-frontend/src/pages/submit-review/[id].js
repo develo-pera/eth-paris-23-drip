@@ -87,85 +87,87 @@ const SubmitReview = () => {
 
   return (
     <MainLayout>
-      <form className="p-4" onSubmit={handleSubmit}>
-        <Text className="container mx-auto px-4 py-20">
-          Tell us about your experience
-        </Text>
-        <Box className="mb-2">Rate:</Box>
-        <Slider
-          id="slider"
-          defaultValue={0}
-          min={0}
-          max={5}
-          colorScheme="teal"
-          onChange={(v) => setReview(v)}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
-          <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
-            0
-          </SliderMark>
-          <SliderMark value={1} mt="1" ml="-2.5" fontSize="sm">
-            1
-          </SliderMark>
-          <SliderMark value={2} mt="1" ml="-2.5" fontSize="sm">
-            2
-          </SliderMark>
-          <SliderMark value={3} mt="1" ml="-2.5" fontSize="sm">
-            3
-          </SliderMark>
-          <SliderMark value={4} mt="1" ml="-2.5" fontSize="sm">
-            4
-          </SliderMark>
-          <SliderMark value={5} mt="1" ml="-2.5" fontSize="sm">
-            5
-          </SliderMark>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <Tooltip
-            hasArrow
-            bg="teal.500"
-            color="white"
-            placement="top"
-            isOpen={showTooltip}
-            label={review}
+      <div className="container mx-auto my-20">
+        <form className="p-4" onSubmit={handleSubmit}>
+          <Text className="text-lg mb-10">
+            Tell us about your experience
+          </Text>
+          <Box className="mb-2">Rate:</Box>
+          <Slider
+            id="slider"
+            defaultValue={0}
+            min={0}
+            max={5}
+            colorScheme="teal"
+            onChange={(v) => setReview(v)}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
           >
-            <SliderThumb />
-          </Tooltip>
-        </Slider>
-        <Box className="mb-2 h-8" />
-        <Textarea
-          value={comment}
-          onChange={handleCommentChange}
-          placeholder="Comment"
-          size="sm"
-        />
-        <Box className="mb-2" />
-        {assets.map((asset, index) => (
-          <AssetCard
-            key={index}
-            index={index}
-            assetObject={asset}
-            handleAssetCardInputChange={handleAssetCardInputChange}
+            <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
+              0
+            </SliderMark>
+            <SliderMark value={1} mt="1" ml="-2.5" fontSize="sm">
+              1
+            </SliderMark>
+            <SliderMark value={2} mt="1" ml="-2.5" fontSize="sm">
+              2
+            </SliderMark>
+            <SliderMark value={3} mt="1" ml="-2.5" fontSize="sm">
+              3
+            </SliderMark>
+            <SliderMark value={4} mt="1" ml="-2.5" fontSize="sm">
+              4
+            </SliderMark>
+            <SliderMark value={5} mt="1" ml="-2.5" fontSize="sm">
+              5
+            </SliderMark>
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <Tooltip
+              hasArrow
+              bg="teal.500"
+              color="white"
+              placement="top"
+              isOpen={showTooltip}
+              label={review}
+            >
+              <SliderThumb />
+            </Tooltip>
+          </Slider>
+          <Box className="mb-2 h-8" />
+          <Textarea
+            value={comment}
+            onChange={handleCommentChange}
+            placeholder="Comment"
+            size="sm"
           />
-        ))}
+          <Box className="mb-2" />
+          {assets.map((asset, index) => (
+            <AssetCard
+              key={index}
+              index={index}
+              assetObject={asset}
+              handleAssetCardInputChange={handleAssetCardInputChange}
+            />
+          ))}
 
-        <div className="my-10">
-          <div
-            onClick={createAssetCard}
-            className="py-9 px-4 rounded-lg text-center hover:cursor-pointer"
-          >
-            <p className="text-sm mb-1">Add asset</p>
-            <AddIcon boxSize={3} />
+          <div className="my-10">
+            <div
+              onClick={createAssetCard}
+              className="py-9 px-4 rounded-lg text-center hover:cursor-pointer"
+            >
+              <p className="text-sm mb-1">Add Image</p>
+              <AddIcon boxSize={3} />
+            </div>
           </div>
-        </div>
-        <Box>
-          <Button colorScheme="teal" size="sm" type="submit">
-            Submit
-          </Button>
-        </Box>
-      </form>
+          <Box>
+            <Button colorScheme="teal" size="sm" type="submit">
+              Submit
+            </Button>
+          </Box>
+        </form>
+      </div>
     </MainLayout>
   );
 };

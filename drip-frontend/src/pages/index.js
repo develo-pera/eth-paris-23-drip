@@ -1,4 +1,4 @@
-import { Input, HStack } from "@chakra-ui/react";
+import { Input } from "@chakra-ui/react";
 import MainLayout from "@/components/layout/layout";
 import RestaurantCard from "@/components/reastaurantCard/reastaurantCard";
 
@@ -9,10 +9,6 @@ export default function Home() {
         <Input className="mx-auto block" maxW={960} placeholder="Search for place" />
       </div>
       <div className="container mx-auto px-4 grid grid-cols-4 gap-10">
-        <RestaurantCard />
-        <RestaurantCard />
-        <RestaurantCard />
-        <RestaurantCard />
         <RestaurantCard />
         <RestaurantCard />
         <RestaurantCard />

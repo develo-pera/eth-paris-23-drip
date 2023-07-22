@@ -9,8 +9,10 @@ const RestaurantCard = () => (
         borderRadius='sm'
       />
       <Text className="text-lg mt-5 font-bold">Restaurant name</Text>
-      <Text>Score: 3.5 (201 rviews)</Text>
-      <Text>Paris, France</Text>
+      <Text>Visited yesterday</Text>
+      <Text>0x147a...c26b</Text>
+      <Text>Accra, Ghana</Text>
+      <Button className="mt-5">Leave a review</Button>
     </CardBody>
   </Card>
 );
