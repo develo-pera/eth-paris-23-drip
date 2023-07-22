@@ -18,7 +18,7 @@ contract SVGCreator {
 
 
 
-    '<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">',
+                            '<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">',
                             '<path id="Rectangle-copy" fill="#272727" fill-rule="evenodd" stroke="none" d="M 0 600 L 600 600 L 600 0 L 0 0 Z"/>',
                             ' <text id="DRIP-Reviwer-lvl" xml:space="preserve"><tspan x="300" y="196" text-anchor="middle" font-family="Rubik" font-size="76" font-weight="700" fill="#ffffff" xml:space="preserve">DRIP</tspan><tspan x="300" y="286" text-anchor="middle" font-family="Rubik" font-size="76" font-weight="700" fill="#ffffff" xml:space="preserve">Reviwer lvl:</tspan></text>'
                             '<text id="10000" xml:space="preserve" x="300" y="444" text-anchor="middle" font-family="Rubik" font-size="157" font-weight="700" fill="#ffffff">',

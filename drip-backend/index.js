@@ -26,9 +26,7 @@ const User = sequelize.define("user", {
   address: {
     type: Sequelize.STRING,
     allowNull: false,
-    indexes: {
-      unique: true
-    }
+    unique: true
   },
   proofOfHumanity: {
     type: Sequelize.BOOLEAN,

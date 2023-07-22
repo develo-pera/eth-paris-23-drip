@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, Image, Text } from "@chakra-ui/react";
 
-const RestaurantCard = () => (
-  <Card className="w-[300px] rounded-sm">
+const AttastetionCard = () => (
+  <Card className="max-w-[300px] rounded-sm">
     <CardBody>
       <Image
         src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -9,12 +9,10 @@ const RestaurantCard = () => (
         borderRadius='sm'
       />
       <Text className="text-lg mt-5 font-bold">Restaurant name</Text>
-      <Text>Visited yesterday</Text>
-      <Text>0x147a...c26b</Text>
       <Text>Accra, Ghana</Text>
       <Button className="mt-5">Leave a review</Button>
     </CardBody>
   </Card>
 );
 
-export default RestaurantCard;
+export default AttastetionCard;

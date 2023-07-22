@@ -21,7 +21,7 @@ const Header = () => {
         </Link>
         {
           address ? (
-            <Text>{address}</Text>
+            <Text className="p-3 bg-gray-100 rounded-sm">{`${address.slice(0, 7)}...${address.slice(-5)}`}</Text>
           ) : (
           <div className="flex items-center justify-between gap-10">
             <a>Join as restaurant</a>
@@ -30,7 +30,7 @@ const Header = () => {
           )
         }
       </div>
-        <ConnectModal isOpen={isConnectModalOpen} handleClose={closeConnectModal} />
+      <ConnectModal isOpen={isConnectModalOpen} handleClose={closeConnectModal} />
     </>
   );
 }

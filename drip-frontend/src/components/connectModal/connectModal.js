@@ -8,11 +8,31 @@ const MMSDK = new MetaMaskSDK({dappMetadata: {name: "DRIP app"}});
 const ConnectModal = ({isOpen, handleClose}) => {
   const { connect } = useConnect({
     connector: new InjectedConnector(),
+    onSuccess: data => onMetamaskConnect(data)
   });
 
+  const onMetamaskConnect = async (data) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        address: data.account,
+      }),
+    });
+    const responseJson = await response.json();
+  }
+
   const connectMetamask = async () => {
-    await connect();
-    handleClose();
+
+    try {
+      await connect();
+
+      handleClose();
+    } catch (e) {
+      console.log("something went wrong")
+    }
   }
 
   return (
