@@ -102,6 +102,18 @@ router.post("/user", async (ctx) => {
   }
 });
 
+router.get("/user/:address", async (ctx) => {
+  const user = await User.findOne({where: {address: ctx.params.address}}, {include: Review});
+
+  if (!user) {
+    ctx.status = 404;
+    ctx.body = "User not found";
+  } else {
+    ctx.body = user;
+  }
+});
+
+
 router.post("/review", async (ctx) => {
   const { score, comment, images } = ctx.request.body;
 

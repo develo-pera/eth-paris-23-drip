@@ -12,16 +12,28 @@ const ConnectModal = ({isOpen, handleClose}) => {
   });
 
   const onMetamaskConnect = async (data) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        address: data.account,
-      }),
-    });
-    const responseJson = await response.json();
+    const userRepsonse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${data.account}`);
+    const userResponseJson = await userRepsonse.json();
+
+    console.log(userResponseJson);
+
+    if (!userResponseJson) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: data.account,
+          }),
+        });
+        const responseJson = await response.json();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
   }
 
   const connectMetamask = async () => {
