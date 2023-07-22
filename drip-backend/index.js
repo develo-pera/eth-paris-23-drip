@@ -53,7 +53,6 @@ const Image = sequelize.define("review", {
   },
 });
 
-
 User.hasMany(Review, {
   foreignKey: 'userId',
   as: 'reviews',
@@ -103,7 +102,7 @@ router.post("/user", async (ctx) => {
 });
 
 router.get("/user/:address", async (ctx) => {
-  const user = await User.findOne({where: {address: ctx.params.address}}, {include: Review});
+  const user = await User.findOne({where: {address: ctx.params.address}}, {include: [Review]});
 
   if (!user) {
     ctx.status = 404;
@@ -134,8 +133,28 @@ router.post("/review", async (ctx) => {
     ctx.status = 500;
     ctx.body = 'Failed to create project with assets';
   }
-
 });
+
+router.get("/restaurants", async (ctx) => {
+  const restaurants = await Restaurant.findAll();
+  ctx.body = restaurants;
+});
+
+router.post("/restaurant", async (ctx) => {
+  const { name, address } = ctx.request.body;
+
+  console.log(name)
+  console.log(address)
+
+  try {
+    const restaurant = await Restaurant.create({ name, address });
+    ctx.body = restaurant;
+  } catch (e) {
+    ctx.status = 500;
+    ctx.body = 'Failed to create restaurant';
+  }
+});
+
 
 // router.get("/projects", async (ctx) => {
 //   const projects = await Project.findAll({

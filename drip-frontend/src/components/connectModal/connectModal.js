@@ -1,5 +1,6 @@
 import { useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
+
 import {
   Button,
   Modal,
@@ -22,15 +23,15 @@ const ConnectModal = ({ isOpen, handleClose }) => {
   });
 
   const onMetamaskConnect = async (data) => {
-    setAuth(data.account);
-    const userRepsonse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${data.account}`
-    );
-    const userResponseJson = await userRepsonse.json();
 
-    console.log(userResponseJson);
+    try {
+      const userRepsonse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${data.account}`
+      );
+      const userResponseJson = await userRepsonse.json();
 
-    if (!userResponseJson) {
+      setAuth(data.account);
+    } catch (e) {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
@@ -45,11 +46,12 @@ const ConnectModal = ({ isOpen, handleClose }) => {
           }
         );
         const responseJson = await response.json();
+        setAuth(data.account);
       } catch (e) {
         console.log(e);
       }
     }
-  };
+  }
 
   const connectMetamask = async () => {
     try {
