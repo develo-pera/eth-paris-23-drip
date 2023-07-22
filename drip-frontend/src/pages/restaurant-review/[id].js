@@ -86,8 +86,11 @@ const RestaurantReview = () => (
 
     <Box>
       {mock.listOfReviews.map((review) => (
-        <Box key={review.id} className="container p-4">
-          <Box className="container pb-4 flex flex-row justify-start items-center gap-2">
+        <Box
+          key={review.id}
+          className="w-full p-4 border-b-stone-100 border-b-2"
+        >
+          <Box className="pb-4 flex flex-row justify-start items-center gap-2">
             <Image src={review.user.avatar} className="w-12 rounded-full" />
             <Box>
               <Text className="text-lg font-bold">{review.user.name}</Text>
