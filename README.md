@@ -5,3 +5,6 @@ QuickNode:
 
 Worldcoin:
 - We use Worldcoin to prove that reviewer is human
+
+Airstack:
+- We fetch POAPs with Airstack
