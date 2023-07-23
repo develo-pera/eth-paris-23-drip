@@ -39,7 +39,7 @@ const ValidatePOAP = () => {
   }
 
   if (data?.Poaps?.Poap) {
-    return <Text>POAP Confirmed!</Text>;
+    return <Text className="text-lg mb-10" color="green">POAP Confirmed! 🙌</Text>;
   }
 
   return <Text>We could not confirm your proof of attendance</Text>;

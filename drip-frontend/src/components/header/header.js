@@ -15,7 +15,7 @@ const Header = () => {
     <>
       <div className="container mx-auto p-4 flex items-center justify-between">
         <Link href="/">
-          <Text>DRIPvisor</Text>
+          <Text>DRIP</Text>
         </Link>
         {
           address ? (
