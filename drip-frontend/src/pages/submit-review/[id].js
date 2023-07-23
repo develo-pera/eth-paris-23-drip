@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IDKitWidget } from '@worldcoin/idkit';
+import { IDKitWidget } from "@worldcoin/idkit";
 import MainLayout from "@/components/layout/layout";
 import {
   Box,
@@ -12,7 +12,8 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  Tooltip, Spinner,
+  Tooltip,
+  Spinner,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { storageClient } from "@/lib/web3Storage";
@@ -20,10 +21,13 @@ import { storageClient } from "@/lib/web3Storage";
 import AssetCard from "./AssetCard";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
+import ValidatePOAP from "@/components/validatePOAP/ValidatePOAP";
+import { useAuth } from "@/context/auth";
 
 const SubmitReview = () => {
   const router = useRouter();
   const { address } = useAccount();
+  const { setAuth } = useAuth();
   const [pageLoading, setPageLoading] = useState(false);
   const [user, setUser] = useState();
   const [comment, setComment] = useState("");
@@ -38,9 +42,14 @@ const SubmitReview = () => {
 
     setPageLoading(true);
 
-    const userRepsonse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`);
+    const userRepsonse = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`
+    );
     const userResponseJson = await userRepsonse.json();
     setUser(userResponseJson);
+    setAuth(userResponseJson);
+
+    console.log("??? sertting user", userResponseJson);
 
     // const restoResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${address}`);
     // const userResponseJson = await userRepsonse.json();
@@ -139,7 +148,7 @@ const SubmitReview = () => {
   const onWorldCoinSuccess = async () => {
     setUser({
       ...user,
-      proofOfHumanity: true
+      proofOfHumanity: true,
     });
     // try {
     //   const response = await fetch(
@@ -173,46 +182,43 @@ const SubmitReview = () => {
           <Spinner />
         </div>
       </MainLayout>
-    )
+    );
   }
 
-  console.log(review)
+  console.log(review);
 
   return (
     <MainLayout>
       <div className="container mx-auto my-20">
-        {
-          user &&
-          !user?.proofOfHumanity ? (
-            <div className="mb-10">
-              <Text>Prove us that you&apos;re human</Text>
-              {/*<Text className="text-sm italic">Note: you have to do this only first time</Text>*/}
-              <div className="mt-5 grid gap-2 md:grid-cols-4">
-                {/*<Button colorScheme="teal">Prove with Sismo</Button>*/}
-                {/*<Button onClick={onWorldCoinSuccess} colorScheme="teal">Prove with Worldcoin</Button>*/}
-                <IDKitWidget
-                  app_id="app_staging_117627305d852b3d87a05ea6288d9f5a" // obtained from the Developer Portal
-                  action="isHuman" // this is your action name from the Developer Portal
-                  signal="user_value" // any arbitrary value the user is committing to, e.g. a vote
-                  onSuccess={onWorldCoinSuccess}
-                  credential_types={['phone']} // the credentials you want to accept
-                  enableTelemetry
-                >
-                  {({ open }) => <button onClick={open}>Verify with World ID</button>}
-                </IDKitWidget>
-              </div>
+        <ValidatePOAP />
+        {user && !user?.proofOfHumanity ? (
+          <div className="mb-10">
+            <Text>Prove us that you&apos;re human</Text>
+            {/*<Text className="text-sm italic">Note: you have to do this only first time</Text>*/}
+            <div className="mt-5 grid gap-2 md:grid-cols-4">
+              {/*<Button colorScheme="teal">Prove with Sismo</Button>*/}
+              {/*<Button onClick={onWorldCoinSuccess} colorScheme="teal">Prove with Worldcoin</Button>*/}
+              <IDKitWidget
+                app_id="app_staging_117627305d852b3d87a05ea6288d9f5a" // obtained from the Developer Portal
+                action="isHuman" // this is your action name from the Developer Portal
+                signal="user_value" // any arbitrary value the user is committing to, e.g. a vote
+                onSuccess={onWorldCoinSuccess}
+                credential_types={["phone"]} // the credentials you want to accept
+                enableTelemetry
+              >
+                {({ open }) => (
+                  <button onClick={open}>Verify with World ID</button>
+                )}
+              </IDKitWidget>
             </div>
-          ) : (
-            <Text className="text-lg mb-10" color="green">You proved that you are human! 🥳</Text>
-          )
-        }
-
-        <div className="mb-10">
-          <Text>Prove that you have ETH Belgrade POAP</Text>
-          <div className="mt-5 grid gap-2 md:grid-cols-4">
-            <Button colorScheme="teal">Get POAP</Button>
           </div>
-        </div>
+        ) : (
+          <Text className="text-lg mb-10" color="green">
+            You proved that you are human! 🥳
+          </Text>
+        )}
+
+        <ValidatePOAP />
         <form onSubmit={handleSubmit}>
           <Box className="mb-2">Rate:</Box>
           <Slider
@@ -257,20 +263,16 @@ const SubmitReview = () => {
               <SliderThumb />
             </Tooltip>
           </Slider>
-          {
-            review &&
-            review > 3 &&
-            (
-              <div className="mt-20 mb-10">
-                <Text className="mb-5">Looks like you really loved the place! Wanna leave a tip?</Text>
-                <Button colorScheme="blue">Leave the tip in ApeCoin</Button>
-              </div>
-            )
-          }
+          {review && review > 3 && (
+            <div className="mt-20 mb-10">
+              <Text className="mb-5">
+                Looks like you really loved the place! Wanna leave a tip?
+              </Text>
+              <Button colorScheme="blue">Leave the tip in ApeCoin</Button>
+            </div>
+          )}
           <Box className="mb-2 h-8" />
-          <Text className="text-lg mb-5">
-            Tell us about your experience
-          </Text>
+          <Text className="text-lg mb-5">Tell us about your experience</Text>
           <Textarea
             value={comment}
             onChange={handleCommentChange}
@@ -297,7 +299,12 @@ const SubmitReview = () => {
             </div>
           </div>
           <Box>
-            <Button disabled={!user?.proofOfHumanity} className="w-[100%] bg-teal-500" size="lg" type="submit">
+            <Button
+              disabled={!user?.proofOfHumanity}
+              className="w-[100%] bg-teal-500"
+              size="lg"
+              type="submit"
+            >
               Submit
             </Button>
           </Box>
