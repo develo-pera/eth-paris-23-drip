@@ -1,4 +1,4 @@
-import { Input } from "@chakra-ui/react";
+import { Button, Input } from "@chakra-ui/react";
 import MainLayout from "@/components/layout/layout";
 import RestaurantCard from "@/components/reastaurantCard/reastaurantCard";
 import AttastetionCard from "@/attastetionCard/attastetionCard";
@@ -19,6 +19,19 @@ export default function Home() {
     }
   };
 
+  const generate = async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/restaurant`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "ETH Belgrade",
+        address: "MTS Dvorana"
+      }),
+    })
+  }
+
   useEffect(() => {
     fetchData();
   }, [])
@@ -34,6 +47,7 @@ export default function Home() {
           restaurants.map((res, i) => <AttastetionCard key={i} restaurantId={res.id} name={res.name} address={res.address} isConnected={address} />)
         }
       </div>
+      {/*<Button onClick={generate}>Generate Project</Button>*/}
     </MainLayout>
   )
 }

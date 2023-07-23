@@ -46,7 +46,7 @@ const Review = sequelize.define("review", {
   }
 });
 
-const Image = sequelize.define("review", {
+const Image = sequelize.define("image", {
   cid: {
     type: Sequelize.STRING,
     allowNull: false
@@ -64,7 +64,7 @@ Review.belongsTo(User, {
 });
 
 Restaurant.hasMany(Review, {
-  foreignKey: 'restaurantId',
+  foreignKey: 'reviewId',
   as: 'reviews',
 });
 
@@ -74,7 +74,7 @@ Review.belongsTo(Restaurant, {
 });
 
 Review.hasMany(Image, {
-  foreignKey: 'reviewId',
+  foreignKey: 'imageId',
   as: 'images',
 });
 
@@ -126,10 +126,14 @@ router.get("/user/:address", async (ctx) => {
 
 
 router.post("/review", async (ctx) => {
-  const { score, comment, images } = ctx.request.body;
+  const { score, comment, images, restaurantId, userAddress } = ctx.request.body;
+
+  const user = await User.findOne({where: {address: userAddress}});
+
+  console.log("user", user);
 
   try {
-    const review = await Review.create({ score, comment });
+    const review = await Review.create({ score, comment, restaurantId, userId: user.id });
 
     const createdImages = await Promise.all(
       images.map(async (asset) => {
@@ -143,13 +147,35 @@ router.post("/review", async (ctx) => {
     ctx.body = review;
   } catch (e) {
     ctx.status = 500;
-    ctx.body = 'Failed to create project with assets';
+    ctx.body = 'Failed to create review';
   }
 });
 
 router.get("/restaurants", async (ctx) => {
   const restaurants = await Restaurant.findAll();
   ctx.body = restaurants;
+});
+
+router.get("/restaurant/:id", async (ctx) => {
+  const restaurant = await Restaurant.findOne({where: {id: ctx.params.id}}, {include: [Review]});
+
+  if (!restaurant) {
+    ctx.status = 404;
+    ctx.body = "Place not found";
+  } else {
+    ctx.body = restaurant;
+  }
+});
+
+router.get("/restaurant/:id/reviews", async (ctx) => {
+  const reviews = await Review.findAll({where: {restaurantId: ctx.params.id}}, {include: User});
+
+  if (!reviews) {
+    ctx.status = 404;
+    ctx.body = "Reviews not found";
+  } else {
+    ctx.body = reviews;
+  }
 });
 
 router.post("/restaurant", async (ctx) => {
@@ -163,7 +189,7 @@ router.post("/restaurant", async (ctx) => {
     ctx.body = restaurant;
   } catch (e) {
     ctx.status = 500;
-    ctx.body = 'Failed to create restaurant';
+    ctx.body = 'Failed to create place';
   }
 });
 

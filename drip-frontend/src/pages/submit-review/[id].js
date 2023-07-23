@@ -68,9 +68,25 @@ const SubmitReview = () => {
 
   const saveFormToDatabase = async (assetsJsonCids) => {
     const data = {
+      score: review,
       comment,
-      assets: assetsJsonCids,
+      images: assetsJsonCids,
+      restaurantId: router.query.id,
+      userAddress: address
     };
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const responseJson = await response.json();
+
+    alert("Success");
+    console.log(responseJson)
   };
 
   const handleCommentChange = (e) => {
@@ -79,17 +95,23 @@ const SubmitReview = () => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (!user?.proofOfHumanity) {
-      alert("Njesi covek");
+       alert("No human, no cry");
+       return;
     }
 
-    e.preventDefault();
     const uncompleteAssetsInAssetArray = !!assets.find(
       (asset) => asset.file === null || asset.file?.name === ""
     );
 
     if (uncompleteAssetsInAssetArray) {
       return alert("Validation error! All fields must be populated");
+    }
+
+    if (assets.length) {
+
     }
 
     // TODO: Save project and data in database
