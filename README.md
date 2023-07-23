@@ -2,6 +2,7 @@ Eligible Bounties:
 
 NounsDAO:
 - Our project is Permissionless Public Good
+- Free for people to use
 
 Metamask:
 - We use WAGMI libarary which implements MM SDK (Mirko told us it counts and that's enough to be eligible :D)
@@ -17,3 +18,6 @@ Airstack:
 
 Graph:
 - Used subgraph to fetch user NFT data
+
+FileCoin:
+- Storing images on IPFS
