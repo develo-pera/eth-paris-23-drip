@@ -101,6 +101,18 @@ router.post("/user", async (ctx) => {
   }
 });
 
+router.put("/user/:id", async (ctx) => {
+  const { address, proofOfHumanity } = ctx.request.body;
+
+  try {
+    const user = await User.update({proofOfHumanity, address}, { where: { id: ctx.params.id } });
+    ctx.body = user;
+  } catch (e) {
+    ctx.status = 500;
+    ctx.body = 'Failed to update the user';
+  }
+});
+
 router.get("/user/:address", async (ctx) => {
   const user = await User.findOne({where: {address: ctx.params.address}}, {include: [Review]});
 
