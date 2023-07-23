@@ -14,3 +14,6 @@ Worldcoin:
 
 Airstack:
 - We fetch POAPs with Airstack
+
+Graph:
+- Used subgraph to fetch user NFT data
