@@ -11,6 +11,7 @@ import "./SVGCreator.sol";
 
 contract DripNFT is ERC721, Ownable {
     uint256 public supply = 0;
+    mapping(address => uint256) public lvl;
     SVGCreator public svgCreator;
 
     event TokenMinted(address indexed to, uint indexed tokenId, string tokenURI);
@@ -23,9 +24,14 @@ contract DripNFT is ERC721, Ownable {
         require(balanceOf(_to) < 1, "Minting limit for user exceeded");
 
         supply += 1;
+        lvl[_to] = 1;
         _safeMint(_to, supply);
 
         emit TokenMinted(msg.sender, supply, this.tokenURI(supply));
+    }
+
+    function upgradeLvl(address _reviwer) public onlyOwner {
+        lvl[_reviwer] = lvl[_reviwer] + 1;
     }
 
     function tokenURI(uint256 tokenId) override(ERC721) public view returns (string memory) {
@@ -34,7 +40,7 @@ contract DripNFT is ERC721, Ownable {
             bytes(string(
                 abi.encodePacked(
                     '{"name": "Drip Reputation NFT #', Strings.toString(tokenId), '",',
-                    '"image_data": "', svgCreator.createSvg(1000), '",',
+                    '"image_data": "', svgCreator.createSvg(lvl[ownerOf(tokenId)]), '",',
                     '"description": "This NFT id mom transferable and servers as reputation for DRIP review platform"',
                     '}'
                 )

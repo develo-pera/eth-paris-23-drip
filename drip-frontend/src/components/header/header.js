@@ -19,7 +19,9 @@ const Header = () => {
         </Link>
         {
           address ? (
-            <Text className="p-3 bg-gray-100 rounded-sm">{`${address.slice(0, 7)}...${address.slice(-5)}`}</Text>
+            <Link href={`/user/${address}`}>
+              <Text className="p-3 bg-gray-100 rounded-sm">{`${address.slice(0, 7)}...${address.slice(-5)}`}</Text>
+            </Link>
           ) : (
           <div className="flex items-center justify-between gap-10">
             {/*<a>Join as place</a>*/}
