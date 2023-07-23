@@ -190,7 +190,6 @@ const SubmitReview = () => {
   return (
     <MainLayout>
       <div className="container mx-auto my-20">
-        <ValidatePOAP />
         {user && !user?.proofOfHumanity ? (
           <div className="mb-10">
             <Text>Prove us that you&apos;re human</Text>

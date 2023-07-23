@@ -1,6 +1,6 @@
-const query = `query POAPsPatricioEth {
+const query = `query POAPs($address: Identity!, $eventId: String!) {
     Poaps(
-      input: {filter: {owner: {_eq: $address}, {eventId: {_eq: $eventId}}, blockchain: ALL, limit: 10}) 
+      input: {filter: {owner: {_eq: $address}, eventId: {_eq: $eventId}}, blockchain: ALL, limit: 10}) 
       {
       Poap {
         eventId
