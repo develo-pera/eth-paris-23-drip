@@ -15,7 +15,10 @@ const Header = () => {
     <>
       <div className="container mx-auto p-4 flex items-center justify-between">
         <Link href="/">
-          <Text>DRIP</Text>
+          <div className="max-w-[50px] flex items-center">
+            <img src="https://nouns.wtf/static/media/noggles.7644bfd0.svg" alt="Nouns logo" />
+            <Text className="text-lg">DRIP</Text>
+          </div>
         </Link>
         {
           address ? (

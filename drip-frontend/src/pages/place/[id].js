@@ -30,7 +30,7 @@ const Place = () => {
         <div className="w-[100%] h-[244px] bg-[url('https://i.ibb.co/x2wzXpr/01-I-m-hacking-at-ETH-Belgrade.jpg')] bg-cover mb-10" />
         <Text className="">Total score: {reviews?.reduce((accumulator, currentValue) => {
           return accumulator + currentValue.score
-        }, 0)} ({reviews?.length} reviews)</Text>
+        }, 0) / reviews?.length} ({reviews?.length} reviews)</Text>
         <Text className="text-xl">{place?.name}</Text>
         <Text>Address: {place?.address}</Text>
 
