@@ -40,7 +40,7 @@ const Profile = () => {
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-20">
-        <img className="max-w-[400px] mx-auto block" src={token.image_data} alt=""/>
+        <img className="max-w-[400px] mx-auto block" src={token?.image_data} alt=""/>
       </div>
     </MainLayout>
   );

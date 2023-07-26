@@ -23,7 +23,7 @@ const ValidatePOAP = () => {
   if (!poapChecked) {
     return (
       <div className="mb-10">
-        <Text>Prove that you have POAP</Text>
+        <Text>Prove that you have necessary POAP</Text>
         <div className="mt-5 grid gap-2 md:grid-cols-4">
           <Button
             disabled={loading}
@@ -31,7 +31,7 @@ const ValidatePOAP = () => {
             colorScheme="teal"
             className="flex flex-row gap-6"
           >
-            Get POAP {loading && <Spinner size="xs" />}
+            Check POAP {loading && <Spinner size="xs" />}
           </Button>
         </div>
       </div>
